@@ -7,33 +7,35 @@ const {
 const { hashPassword } = require("../utilities/password");
 
 async function findUserByLoginService(emailOrUsername) {
-  const users = await findUserByLoginDal({ value: emailOrUsername });
-  const lastIndex = users[0].length - 1;
+  const result = await findUserByLoginDal({ value: emailOrUsername });
+  const lastIndex = result.length - 1;
   return {
-    ...users.slice(0, lastIndex),
-    ...users[lastIndex],
+    ...result.slice(0, lastIndex),
+    ...result[lastIndex],
   };
 }
 
-function getUserService(id) {
-  return getUserDal({ id });
+async function getUserService(id) {
+  const idNum = Number(id);
+  const result = await getUserDal({ id: idNum });
+  return idNum ? result[0] : result;
 }
 
 async function upsertUserService({ password, ...params }) {
-  const users = await upsertUserDal({
+  const result = await upsertUserDal({
     ...params,
     password: await hashPassword(password),
   });
-  const lastIndex = users[0].length - 1;
+  const lastIndex = result[0].length - 1;
   return {
-    ...users[0].slice(0, lastIndex),
-    ...users[0][lastIndex],
+    ...result[0].slice(0, lastIndex),
+    ...result[0][lastIndex],
   };
 }
 
 async function deleteUserService(id) {
-  const users = await deleteUserDal({ id });
-  return users[0];
+  const result = await deleteUserDal({ id: Number(id) });
+  return result[0][0];
 }
 
 module.exports = {
