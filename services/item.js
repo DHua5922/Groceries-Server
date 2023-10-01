@@ -1,21 +1,23 @@
 const { getItemDal, upsertItemDal, deleteItemDal } = require("../dal/item");
 
-function getItemService(id) {
-  return getItemDal({ id });
+async function getItemService(id) {
+  const idNum = Number(id);
+  const result = await getItemDal({ id: idNum });
+  return idNum ? result[0] : result;
 }
 
 async function upsertItemService(params) {
-  const items = await upsertItemDal(params);
-  const lastIndex = items[0].length - 1;
+  const result = await upsertItemDal(params);
+  const lastIndex = result[0].length - 1;
   return {
-    ...items[0].slice(0, lastIndex),
-    ...items[0][lastIndex],
+    ...result[0].slice(0, lastIndex),
+    ...result[0][lastIndex],
   };
 }
 
 async function deleteItemService(id) {
-  const items = await deleteItemDal({ id });
-  return items[0];
+  const result = await deleteItemDal({ id: Number(id) });
+  return result[0][0];
 }
 
 module.exports = {
