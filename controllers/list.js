@@ -48,7 +48,7 @@ async function upsertListController(context, req) {
 
 async function deleteListController(context, req) {
   try {
-    const user = await deleteListService(req.body);
+    const user = await deleteListService(req.params.id);
     if (!user.statusCode) {
       throw new BadRequestError(user.statusMessage);
     }
