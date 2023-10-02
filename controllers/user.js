@@ -48,7 +48,7 @@ async function upsertUserController(context, req) {
 
 async function deleteUserController(context, req) {
   try {
-    const user = await deleteUserService(req.body);
+    const user = await deleteUserService(req.params.id);
     if (!user.statusCode) {
       throw new BadRequestError(user.statusMessage);
     }
