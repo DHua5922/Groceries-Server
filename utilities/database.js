@@ -1,7 +1,7 @@
 const sequelize = require("sequelize");
 
 class Sequelize {
-  constructor(database, server, domain, options = {}) {
+  constructor(username, password, database, host, options = {}) {
     this.sequelize = new sequelize.Sequelize({
       dialect: "mssql",
       pool: {
@@ -10,20 +10,11 @@ class Sequelize {
         acquire: 30000,
         idle: 10000,
       },
-      dialectOptions: {
-        authentication: {
-          type: "default",
-          options: {
-            domain, // Your Windows domain (e.g., 'WORKGROUP')
-          },
-        },
-      },
-      server, // Your SQL Server instance name
-      database, // Your database name
-      options: {
-        trustedConnection: true, // Use Windows authentication
-      },
       ...options,
+      username,
+      password,
+      database,
+      host,
     });
   }
 

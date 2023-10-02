@@ -9,15 +9,17 @@ async function getItemService(id) {
 async function upsertItemService(params) {
   const result = await upsertItemDal(params);
   const lastIndex = result[0].length - 1;
+  const list = result[0].slice(0, lastIndex);
+  const status = result[0][lastIndex];
   return {
-    ...result[0].slice(0, lastIndex),
-    ...result[0][lastIndex],
+    ...list[0],
+    ...status,
   };
 }
 
 async function deleteItemService(id) {
   const result = await deleteItemDal({ id: Number(id) });
-  return result[0][0];
+  return result[0];
 }
 
 module.exports = {

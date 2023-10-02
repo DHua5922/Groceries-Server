@@ -1,3 +1,4 @@
+const { last } = require("lodash");
 const {
   findUserByLoginDal,
   getUserDal,
@@ -9,9 +10,11 @@ const { hashPassword } = require("../utilities/password");
 async function findUserByLoginService(emailOrUsername) {
   const result = await findUserByLoginDal({ value: emailOrUsername });
   const lastIndex = result.length - 1;
+  const list = result.slice(0, lastIndex);
+  const status = result[lastIndex];
   return {
-    ...result.slice(0, lastIndex),
-    ...result[lastIndex],
+    ...list[0],
+    ...status,
   };
 }
 
@@ -27,15 +30,17 @@ async function upsertUserService({ password, ...params }) {
     password: await hashPassword(password),
   });
   const lastIndex = result[0].length - 1;
+  const list = result[0].slice(0, lastIndex);
+  const status = result[0][lastIndex];
   return {
-    ...result[0].slice(0, lastIndex),
-    ...result[0][lastIndex],
+    ...list[0],
+    ...status,
   };
 }
 
 async function deleteUserService(id) {
   const result = await deleteUserDal({ id: Number(id) });
-  return result[0][0];
+  return result[0];
 }
 
 module.exports = {

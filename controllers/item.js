@@ -48,7 +48,7 @@ async function upsertItemController(context, req) {
 
 async function deleteItemController(context, req) {
   try {
-    const user = await deleteItemService(req.body);
+    const user = await deleteItemService(req.params.id);
     if (!user.statusCode) {
       throw new BadRequestError(user.statusMessage);
     }
